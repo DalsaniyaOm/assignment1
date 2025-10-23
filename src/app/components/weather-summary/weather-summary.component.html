@@ -1,0 +1,46 @@
+<ion-content>
+  <!-- Loading state -->
+  <ion-card *ngIf="loading">
+    <ion-card-content>Loading weather data...</ion-card-content>
+  </ion-card>
+
+  <!-- Error state -->
+  <ion-card *ngIf="error">
+    <ion-card-content>{{ error }}</ion-card-content>
+  </ion-card>
+
+  <!-- Weather average display -->
+  <ion-card *ngIf="weatherData">
+    <ion-card-header>
+      <ion-card-title>Average Weather</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Cities:</strong> {{ weatherData.cities.join(', ') }}</p>
+      <p><strong>Average Temperature:</strong> {{ weatherData.averageTemp }} °C</p>
+      <p><strong>Average Humidity:</strong> {{ weatherData.averageHumidity }}%</p>
+    </ion-card-content>
+  </ion-card>
+  
+  <ion-header>
+  <ion-toolbar>
+    <ion-title>Ontario AQHI</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="ontarioData">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ ontarioData.region }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>AQHI: {{ ontarioData['SAQS_2015'] }}</p>
+      <p>Last Updated: {{ ontarioData['SAQS_2024'] }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+
+<ion-content *ngIf="!ontarioData">
+  <ion-spinner></ion-spinner>
+</ion-content>
+
+</ion-content>

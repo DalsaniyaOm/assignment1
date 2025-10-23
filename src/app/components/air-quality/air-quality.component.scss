@@ -1,0 +1,29 @@
+.aqhi-table {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+
+  ion-row {
+    border-bottom: 1px solid #888;
+  }
+
+  ion-col {
+    border-right: 1px solid #888;
+    padding: 8px;
+    text-align: center;
+  }
+
+  ion-col:last-child {
+    border-right: none;
+  }
+
+  .header-row {
+    background: #222;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  ion-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+  }
+}

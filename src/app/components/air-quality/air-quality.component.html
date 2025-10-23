@@ -1,0 +1,39 @@
+<ion-content>
+  <!-- Loading -->
+  <ion-card *ngIf="loading">
+    <ion-card-content>Loading AQHI data...</ion-card-content>
+  </ion-card>
+
+  <!-- Error -->
+  <ion-card *ngIf="error">
+    <ion-card-content>{{ error }}</ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="message">
+    <ion-card-header>
+      <ion-card-title>Message from Details</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      {{ message }}
+    </ion-card-content>
+  </ion-card>
+  <!-- AQHI Table -->
+  <ion-card *ngIf="aqData.length > 0">
+    <ion-card-header>
+      <ion-card-title>Selected Ontario Regions AQHI</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid class="aqhi-table">
+        <ion-row class="header-row">
+          <ion-col><strong>Region</strong></ion-col>
+          <ion-col *ngFor="let year of yearKeys"><strong>{{ year }}</strong></ion-col>
+        </ion-row>
+
+        <ion-row *ngFor="let record of aqData" (click)="goToDetails(record)" button>
+          <ion-col>{{ record.region }}</ion-col>
+          <ion-col *ngFor="let year of yearKeys">{{ record[year] }}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

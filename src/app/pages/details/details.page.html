@@ -1,0 +1,31 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Detail Page</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ record?.region }} AQHI Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="record">
+    <ion-card-header>
+      <ion-card-title>{{ record.region }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let key of (record | keyvalue)">
+          <ion-label>
+            <strong>{{ key.key }}</strong>: {{ key.value }}
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+  <p>
+    <ion-button fill="clear" (click)="goBack()">Back</ion-button>
+  </p>
+</ion-content>

@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { IonHeader, IonTitle, IonToolbar, IonContent } from '@ionic/angular/standalone';
+import { CommonModule } from '@angular/common';
+import { WeatherComponent } from '../components/weather-summary/weather-summary.component'; 
 
 @Component({
   selector: 'app-tab1',
-  templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent],
+  standalone: true,
+  imports: [IonHeader, IonTitle, IonToolbar, IonContent, CommonModule, WeatherComponent], 
+  templateUrl: './tab1.page.html',
+  styleUrls: ['./tab1.page.scss']
 })
-export class Tab1Page {
-  constructor() {}
-}
+export class Tab1Page {}
