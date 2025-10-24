@@ -27,7 +27,7 @@ export class AirQualityComponent implements OnInit {
         this.aqData = data;
 
         if (this.aqData.length > 0) {
-          this.yearKeys = Object.keys(this.aqData[0]).filter(k => k.startsWith('SAQS_'));
+          this.yearKeys = Object.keys(this.aqData[0]).filter(k => /^\d{4}$/.test(k));
         }
 
         this.loading = false;
@@ -39,6 +39,9 @@ export class AirQualityComponent implements OnInit {
     });
     this.msgService.currentMessage.subscribe(msg => {
       this.message = msg;
+      if (msg) {
+        setTimeout(() => this.message = '', 5000);
+      }
     });
   }
 

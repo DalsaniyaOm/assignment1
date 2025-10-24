@@ -26,7 +26,9 @@ export class DetailsPage implements OnInit {
   }
 
   goBack(){
+    const region = this.record.region;
     this.router.navigate(['/tabs/tab2']);
-    this.msgService.setMessage('Hello from Details Page!');
+    this.msgService.setMessage(`YOU JUST SAW ${region.toUpperCase()} AQHI DATA OF A DECADE`);
+
   }
 }
