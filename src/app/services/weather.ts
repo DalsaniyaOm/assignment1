@@ -10,7 +10,6 @@ export class Weather {
 
   private apiKey = environment.openWeatherKey;
   private apiUrl = environment.openWeatherbaseurl;
-  private geoUrl = environment.openWeathergeourl;
 
   constructor(private http: HttpClient) { }
 
