@@ -1,45 +1,124 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Geolocation } from '@capacitor/geolocation';
 import { IonicModule } from '@ionic/angular';
-import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Weather } from 'src/app/services/weather';
-import { Aqhi, AQHIRecord } from 'src/app/services/aqhi';
 
 @Component({
   selector: 'app-weather',
   standalone: true,
-  imports: [CommonModule, IonicModule, HttpClientModule],
+  imports: [IonicModule, CommonModule, FormsModule],
   templateUrl: './weather-summary.component.html',
   styleUrls: ['./weather-summary.component.scss']
 })
 export class WeatherComponent implements OnInit {
   weatherData: any;
-  loading = false;
+  currentCity = '';
+  loading = true;
   error = '';
-  ontarioData?: AQHIRecord;
+  searchQuery = '';
+  allCities: string[] = [];
+  filteredCities: string[] = [];
+  userCountry = '';
 
-  constructor(private weather: Weather, private aqhiService: Aqhi) {}
+  constructor(private weatherService: Weather) {}
 
-  ngOnInit(): void {
-    this.fetchAverageWeather();
-    this.aqhiService.getOntario().subscribe(data => {
-      this.ontarioData = data;
+  async ngOnInit() {
+    await this.initializeWeatherApp();
+  }
+
+  /** Detect user location and load weather + country-specific cities */
+  async initializeWeatherApp() {
+    try {
+      // Try to get precise coordinates
+      const position = await Geolocation.getCurrentPosition();
+      const { latitude, longitude } = position.coords;
+      this.fetchWeatherByCoords(latitude, longitude);
+
+      // Also detect country from IP for city list
+      this.weatherService.getCountryFromIP().subscribe({
+        next: (data: any) => {
+          this.userCountry = data.country_code || '';
+          if (this.userCountry) this.loadCitiesByCountry(this.userCountry);
+        },
+        error: () => {
+          this.error = 'Could not determine country for city list.';
+        }
+      });
+    } catch {
+      // Fallback to IP-based city & country
+      this.weatherService.getCountryFromIP().subscribe({
+        next: (data: any) => {
+          this.currentCity = data.city || 'Your Location';
+          this.userCountry = data.country_code || '';
+          if (data.city) this.getWeatherForCity(data.city);
+          if (this.userCountry) this.loadCitiesByCountry(this.userCountry);
+        },
+        error: () => {
+          this.error = 'Could not determine location or country.';
+          this.loading = false;
+        }
+      });
+    }
+  }
+
+  /** Fetch weather using coordinates */
+  fetchWeatherByCoords(lat: number, lon: number) {
+    this.loading = true;
+    this.weatherService.getWeatherByCoords(lat, lon).subscribe({
+      next: (data: any) => {
+        this.weatherData = data.main;
+        this.currentCity = data.name;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'Failed to fetch weather data.';
+        this.loading = false;
+      }
     });
   }
 
-  fetchAverageWeather(): void {
-    const cities = ['Ottawa,CA', 'Toronto,CA', 'Vancouver,CA', 'Calgary,CA', 'Montreal,CA','Edmonton,CA', 'Halifax,CA', 'Winnipeg,CA', 'Quebec City,CA', 'Victoria,CA'];
-    this.loading = true;
+  /** Load cities only for the detected country */
+  loadCitiesByCountry(countryCode: string) {
+    this.weatherService.getCities().subscribe({
+      next: (data: any[]) => {
+        this.allCities = data
+          .filter((city) => city.country === countryCode)
+          .map((city) => city.name)
+          .filter(Boolean);
 
-    this.weather.getAverageWeather(cities).subscribe({
-      next: (data) => {
-        this.weatherData = data;
-        this.loading = false;
-        this.error = '';
+        this.filteredCities = this.allCities.slice(0, 50); // show first 50 initially
+        console.log(`Loaded ${this.allCities.length} cities for country ${countryCode}`);
       },
-      error: (err) => {
-        console.error(err);
-        this.error = 'Could not fetch weather data';
+      error: () => {
+        this.error = 'Failed to fetch cities list.';
+      }
+    });
+  }
+
+  /** Filter city list as user types */
+  onSearchChange(event: any) {
+    const query = event.detail.value.toLowerCase();
+    this.filteredCities = this.allCities
+      .filter((city) => city.toLowerCase().includes(query))
+      .slice(0, 50);
+  }
+
+  /** Fetch weather for selected city */
+  getWeatherForCity(city: string) {
+    if (!city) return;
+    this.loading = true;
+    this.error = '';
+
+    this.weatherService.getWeatherByCity(city).subscribe({
+      next: (data: any) => {
+        this.weatherData = data.main;
+        this.currentCity = data.name;
+        this.loading = false;
+      },
+      error: () => {
+        this.error = 'City not found.';
         this.loading = false;
       }
     });

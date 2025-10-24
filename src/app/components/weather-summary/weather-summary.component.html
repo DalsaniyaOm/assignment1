@@ -1,46 +1,37 @@
-<ion-content>
-  <!-- Loading state -->
-  <ion-card *ngIf="loading">
-    <ion-card-content>Loading weather data...</ion-card-content>
-  </ion-card>
+<ion-content class="weather-page">
+  <!-- Loading -->
+  <ion-spinner *ngIf="loading" name="dots"></ion-spinner>
 
-  <!-- Error state -->
+  <!-- Error -->
   <ion-card *ngIf="error">
     <ion-card-content>{{ error }}</ion-card-content>
   </ion-card>
 
-  <!-- Weather average display -->
-  <ion-card *ngIf="weatherData">
+  <!-- Weather Display -->
+  <ion-card *ngIf="!loading && !error && weatherData">
     <ion-card-header>
-      <ion-card-title>Average Weather</ion-card-title>
+      <ion-card-title>{{ currentCity }}</ion-card-title>
+      <ion-card-subtitle>Weather Forecast</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
-      <p><strong>Cities:</strong> {{ weatherData.cities.join(', ') }}</p>
-      <p><strong>Average Temperature:</strong> {{ weatherData.averageTemp }} °C</p>
-      <p><strong>Average Humidity:</strong> {{ weatherData.averageHumidity }}%</p>
+      <div class="weather-info">
+        <div>
+          <p><strong>Temperature:</strong> {{ weatherData.temp }} °C</p>
+          <p><strong>Feels Like:</strong> {{ weatherData.feels_like }} °C</p>
+          <p><strong>Min / Max:</strong> {{ weatherData.temp_min }}° / {{ weatherData.temp_max }}°</p>
+          <p><strong>Humidity:</strong> {{ weatherData.humidity }}%</p>
+        </div>
+      </div>
     </ion-card-content>
   </ion-card>
-  
-  <ion-header>
-  <ion-toolbar>
-    <ion-title>Ontario AQHI</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content *ngIf="ontarioData">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>{{ ontarioData.region }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p>AQHI: {{ ontarioData['2015'] }}</p>
-      <p>Last Updated: {{ ontarioData['2024'] }}</p>
-    </ion-card-content>
-  </ion-card>
-</ion-content>
+  <ion-item lines="none">
+    <ion-searchbar placeholder="Search city..." (ionInput)="onSearchChange($event)"></ion-searchbar>
+  </ion-item>
 
-<ion-content *ngIf="!ontarioData">
-  <ion-spinner></ion-spinner>
-</ion-content>
-
+  <ion-list *ngIf="filteredCities.length > 0">
+    <ion-item button *ngFor="let city of filteredCities" (click)="getWeatherForCity(city)">
+      {{ city }}
+    </ion-item>
+  </ion-list>
 </ion-content>

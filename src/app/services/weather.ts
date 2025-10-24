@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable} from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -10,36 +10,29 @@ export class Weather {
 
   private apiKey = environment.openWeatherKey;
   private apiUrl = environment.openWeatherbaseurl;
+  private geoUrl = environment.openWeathergeourl;
 
   constructor(private http: HttpClient) { }
 
-  getWeather(city: string): Observable<any> {
-    const endpoint = 'weather';
-    const url = `${this.apiUrl}${endpoint}?q=${city}&units=metric&appid=${this.apiKey}`;
+  // Get weather by coordinates
+  getWeatherByCoords(lat: number, lon: number): Observable<any> {
+    const url = `${this.apiUrl}?lat=${lat}&lon=${lon}&units=metric&appid=${this.apiKey}`;
     return this.http.get(url);
   }
 
-  getAverageWeather(cities: string[]): Observable<any> {
-    const requests = cities.map(city => this.getWeather(city));
+  // Get weather by city name
+  getWeatherByCity(city: string): Observable<any> {
+    const url = `${this.apiUrl}?q=${city}&units=metric&appid=${this.apiKey}`;
+    return this.http.get(url);
+  }
+  
+  // Fetch country by IP address
+  getCountryFromIP(): Observable<any> {
+    return this.http.get('https://ipapi.co/json/');
+  }
 
-    return forkJoin(requests).pipe(
-      map((responses: any[]) => {
-        let totalTemp = 0;
-        let totalHumidity = 0;
-
-        responses.forEach((res: any) => {
-          totalTemp += res.main.temp;
-          totalHumidity += res.main.humidity;
-        });
-
-        const count = responses.length;
-        return {
-          cities: responses.map(r => r.name),
-          averageTemp: (totalTemp / count).toFixed(2),
-          averageHumidity: (totalHumidity / count).toFixed(2),
-          rawData: responses
-        };
-      })
-    );
+  getCities(): Observable<any[]> {
+    const citiesUrl = 'https://raw.githubusercontent.com/lutangar/cities.json/master/cities.json';
+    return this.http.get<any[]>(citiesUrl);
   }
 }
