@@ -40,7 +40,7 @@ export class AirQualityComponent implements OnInit {
     this.msgService.currentMessage.subscribe(msg => {
       this.message = msg;
       if (msg) {
-        setTimeout(() => this.message = '', 5000);
+        setTimeout(() => this.message = '', 4000);
       }
     });
   }

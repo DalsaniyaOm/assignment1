@@ -21,6 +21,7 @@ export class WeatherComponent implements OnInit {
   allCities: string[] = [];
   filteredCities: string[] = [];
   userCountry = '';
+  weatherTheme = 'default-theme';
 
   constructor(private weatherService: Weather) {}
 
@@ -115,6 +116,7 @@ export class WeatherComponent implements OnInit {
       next: (data: any) => {
         this.weatherData = data.main;
         this.currentCity = data.name;
+        this.setWeatherTheme(data.weather[0]?.main);
         this.loading = false;
       },
       error: () => {
@@ -122,5 +124,22 @@ export class WeatherComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  setWeatherTheme(condition: string) {
+    if (!condition) {
+      this.weatherTheme = 'default-theme';
+      return;
+    }
+
+    const cond = condition.toLowerCase();
+    if (cond.includes('clear')) this.weatherTheme = 'sunny-theme';
+    else if (cond.includes('rain') || cond.includes('drizzle') || cond.includes('thunderstorm'))
+      this.weatherTheme = 'rainy-theme';
+    else if (cond.includes('cloud')) this.weatherTheme = 'cloudy-theme';
+    else if (cond.includes('snow')) this.weatherTheme = 'snowy-theme';
+    else if (cond.includes('mist') || cond.includes('fog') || cond.includes('haze'))
+      this.weatherTheme = 'foggy-theme';
+    else this.weatherTheme = 'default-theme';
   }
 }

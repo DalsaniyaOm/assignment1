@@ -1,0 +1,125 @@
+.weather-page {
+  background-attachment: fixed;
+  padding: 16px;
+  color: #ffffff;
+  transition: background 0.6s ease-in-out, color 0.6s ease-in-out;
+
+
+  ion-spinner {
+    display: block;
+    margin: 50px auto;
+    color: #00d1b2;
+  }
+
+  ion-card {
+    margin-bottom: 10px;
+    border-radius: 12px;
+    background: rgba(30, 30, 30, 0.65);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+
+    ion-card-header {
+      text-align: center;
+
+      ion-card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ffffff;
+      }
+
+      ion-card-subtitle {
+        font-size: 1rem;
+        color: #cccccc;
+      }
+    }
+
+    ion-card-content {
+      .weather-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+
+        p {
+          margin: 6px 0;
+          font-size: 1rem;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  ion-searchbar {
+    --background: rgba(30, 30, 30, 0.70);
+    --color: #ffffff;
+    --placeholder-color: rgba(255, 255, 255, 0.6);
+    --border-radius: 12px;
+    margin: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+  }
+
+  .search {
+    --background: rgba(30, 30, 30, 0.65);
+    margin: 5px;
+    border-radius: 12px;
+  }
+
+  ion-list {
+    max-height: 250px;
+    overflow-y: auto;
+    margin: 5px;
+    border-radius: 12px;
+    background: rgba(30, 30, 30, 0.55);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
+
+    ion-item {
+      --background: #2a2a2a;
+      --color: #ffffff;
+      --padding-start: 16px;
+      --inner-padding-end: 16px;
+      font-size: 1rem;
+      border-bottom: 1px solid #333;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  ion-item[button] {
+    --background: #2a2a2a;
+    --border-radius: 8px;
+    margin: 4px 8px;
+    color: #ffffff;
+  }
+}
+
+/* ===== WEATHER THEMES ===== */
+.weather-page.sunny-theme {
+  --background: linear-gradient(135deg, rgba(255, 183, 77, 0.85), rgba(255, 138, 0, 0.85));
+}
+
+.weather-page.cloudy-theme {
+  --background: linear-gradient(135deg, rgba(120, 120, 120, 0.85), rgba(180, 180, 180, 0.85));
+}
+
+.weather-page.rainy-theme {
+  --background: linear-gradient(135deg, rgba(64, 81, 181, 0.85), rgba(100, 181, 246, 0.85));
+}
+
+.weather-page.snowy-theme {
+  --background: linear-gradient(135deg, rgba(173, 216, 230, 0.85), rgba(240, 248, 255, 0.85));
+  color: #000;
+}
+
+.weather-page.foggy-theme {
+  --background: linear-gradient(135deg, rgba(200, 200, 200, 0.85), rgba(150, 150, 150, 0.85));
+  color: #222;
+}
+
+.weather-page.default-theme {
+  --background: linear-gradient(135deg, rgba(102, 126, 234, 0.85), rgba(118, 75, 162, 0.85), rgba(240, 147, 251, 0.85));
+}

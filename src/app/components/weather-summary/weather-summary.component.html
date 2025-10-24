@@ -1,4 +1,4 @@
-<ion-content class="weather-page">
+<ion-content [ngClass]="weatherTheme" class="weather-page">
   <!-- Loading -->
   <ion-spinner *ngIf="loading" name="dots"></ion-spinner>
 
@@ -25,7 +25,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-item lines="none">
+  <ion-item class="search" lines="none">
     <ion-searchbar placeholder="Search city..." (ionInput)="onSearchChange($event)"></ion-searchbar>
   </ion-item>
 
